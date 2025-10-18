@@ -1,4 +1,5 @@
 import os
+from turtle import mode
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
@@ -65,7 +66,13 @@ class ImageListDataset(Dataset):
         if self.transform: img = self.transform(img)
         return img, idx, p
 
-def main():
+def main(args):
+    os.makedirs(f"{args.checkpoint_dir}", exist_ok=True)
+    EPOCHS = args.epochs
+    # LR = args.lr
+    # BATCH_SIZE = args.batch_size
+    # NUM_WORKERS = args.num_workers
+    # DEVICE = args.device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     transform = transforms.Compose([
@@ -97,27 +104,51 @@ def main():
     # TASK1 : VGG16-based NetVLAD Structure
     # -------------------------------
     model = NetVLADModel(num_clusters=16).to(device)
-    
+    print(model)
 
     # -------------------------------
     # TASK2 : Learning with Ranking Loss
     # -------------------------------
-    train(model, train_loader, val_loader, device, epochs=5)
+    os.makedirs(f"{args.checkpoint_dir}", exist_ok=True)
+    last_epoch_model_path = f"{args.checkpoint_dir}/netvlad_final.pth"
+    if not args.train:
+        if os.path.exists(last_epoch_model_path):
+            model.load_state_dict(torch.load(last_epoch_model_path))
+            print(f"Loaded model from {last_epoch_model_path}")
+        else:
+            print(f"No model found at {last_epoch_model_path}")
+    else:
+        train(model, train_loader, val_loader, device, epochs=EPOCHS,args=args)
+        torch.save(model.state_dict(), f"{args.checkpoint_dir}/netvlad_final.pth")
+    # else:
+    #     print("No training")
+    #     print("Loading model from checkpoint")
+    #     model.load_state_dict(torch.load(last_epoch_model_path))
     test_loss = validate(model, test_loader, device)
     print(f"Final Test Loss = {test_loss:.4f}")
 
-    os.makedirs("./checkpoints", exist_ok=True)
-    torch.save(model.state_dict(), "./checkpoints/netvlad_final.pth")
+
     
 
-    # -------------------------------
-    # TASK3 : Evaluation with Recall@K
-    # -------------------------------
-    gt = np.load("dataset/gt/pitts30k_test.npz", allow_pickle=True)
-    query_ds = ImageListDataset("dataset/query_test.txt", "", transform)
-    db_ds = ImageListDataset("dataset/index_test.txt", "", transform)
-    evaluate_recall(model, query_ds, db_ds, gt["utmQ"], gt["utmDb"], float(gt["posDistThr"]), device, recall_values=[1,5,10])
+    # # -------------------------------
+    # # TASK3 : Evaluation with Recall@K
+    # # -------------------------------
+    # gt = np.load("dataset/gt/pitts30k_test.npz", allow_pickle=True)
+    # query_ds = ImageListDataset("dataset/query_test.txt", "", transform)
+    # db_ds = ImageListDataset("dataset/index_test.txt", "", transform)
+    # evaluate_recall(model, query_ds, db_ds, gt["utmQ"], gt["utmDb"], float(gt["posDistThr"]), device, recall_values=[1,5,10])
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--epochs", type=int, default=1)
+    parser.add_argument("--train", type= bool, default=False)
+    parser.add_argument("--checkpoint_dir", type=str, default="./output/checkpoints")
+    parser.add_argument("--margin", type=float, default=0.1)
+    # parser.add_argument("--lr", type=float, default=1e-4)
+    # parser.add_argument("--batch_size", type=int, default=8)
+    # parser.add_argument("--num_workers", type=int, default=4)
+    # parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
+    args = parser.parse_args()
+    main(args)

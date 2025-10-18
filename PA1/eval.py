@@ -19,8 +19,8 @@ def compute_embeddings(model, dataset, device, batch_size=32):
     return embeddings, indices, paths
 
 def evaluate_recall(model, query_ds, db_ds, utmQ, utmDb, posDistThr, device, recall_values=[1,5,10]):
-    q_embs, _, _ = compute_embeddings(model, query_ds, device)
-    db_embs, _, _ = compute_embeddings(model, db_ds, device)
+    q_embeddings, _, _ = compute_embeddings(model, query_ds, device)
+    db_embeddings, _, _ = compute_embeddings(model, db_ds, device)
 
     recalls = {k: 0 for k in recall_values}
 
@@ -46,8 +46,16 @@ def evaluate_recall(model, query_ds, db_ds, utmQ, utmDb, posDistThr, device, rec
 
     # TODO:
     # 1. Loop over all query embeddings:
+    cosine_sim = torch.nn.CosineSimilarity(dim=1) # returns (B,1)
+    for q_emb in q_embeddings:
     #     - Compute distances or cosine similarity to database embeddings.
+        sim = cosine_sim(q_emb, db_embeddings) # returns (B,1)
+
     #     - Identify positives using utmDb and posDistThr. => These come from the custom class `LoadDataset(Dataset)`
+        all_positives = np.where(np.linalg.norm(utmDb - utmQ, axis=1) < posDistThr)[0]
+        if len(all_positives) == 0:
+            all_positives = [np.argmin(np.linalg.norm(utmDb - utmQ, axis=1))]
+        
     #     - If no positives, use the closest database image as fallback.
     #     - Update recall counts if a positive is within top-K results.
     # 2. Print recall@K values as percentages.
