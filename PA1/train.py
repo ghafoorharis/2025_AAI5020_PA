@@ -4,7 +4,7 @@ import torch.optim as optim
 from tqdm import tqdm
 
 
-def validate(model, loader, device,criterion : nn.Module):
+def validate(model, loader, device,args  = None):
     """
     Your Task) Complete the function in train.py.
 
@@ -17,7 +17,7 @@ def validate(model, loader, device,criterion : nn.Module):
     Returns:
         float: Average validation loss.
     """
-    # criterion = nn.TripletMarginLoss(margin=1.0)
+    criterion = nn.TripletMarginLoss(args.margin)
     total_loss = 0.0
 
     # TODO:

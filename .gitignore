@@ -250,3 +250,6 @@ ehthumbs.db
 Thumbs.db
 *.txt
 *.ipynb
+
+# Unit tests
+unit_tests.py

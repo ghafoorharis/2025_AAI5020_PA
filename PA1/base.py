@@ -13,6 +13,18 @@ from model import NetVLADModel
 from train import train, validate
 from eval import evaluate_recall
 
+
+# Additonal Imports
+try:
+    import os
+    import argparse
+    import matplotlib.pyplot as plt
+    from PIL import Image
+    flag = True
+except ImportError:
+    print("Optional libraries for additional imports are not installed. Please install them using: pip install argparse matplotlib pillow")
+    flag = False
+
 class LoadDataset(Dataset):
     def __init__(self, query_file, db_file, root_dir, gt_npz, transform=None):
         super().__init__()
@@ -68,6 +80,8 @@ class ImageListDataset(Dataset):
 
 def main(args):
     os.makedirs(f"{args.checkpoint_dir}", exist_ok=True)
+    os.makedirs(f"{args.save_dir}", exist_ok=True)
+
     EPOCHS = args.epochs
     # LR = args.lr
     # BATCH_SIZE = args.batch_size
@@ -124,28 +138,43 @@ def main(args):
     #     print("No training")
     #     print("Loading model from checkpoint")
     #     model.load_state_dict(torch.load(last_epoch_model_path))
-    test_loss = validate(model, test_loader, device)
+    test_loss = validate(model, test_loader, device,args=args)
     print(f"Final Test Loss = {test_loss:.4f}")
-
-
-    
-
     # # -------------------------------
     # # TASK3 : Evaluation with Recall@K
     # # -------------------------------
-    # gt = np.load("dataset/gt/pitts30k_test.npz", allow_pickle=True)
-    # query_ds = ImageListDataset("dataset/query_test.txt", "", transform)
-    # db_ds = ImageListDataset("dataset/index_test.txt", "", transform)
+    gt = np.load("dataset/gt/pitts30k_test.npz", allow_pickle=True)
+    query_ds = ImageListDataset("dataset/query_test.txt", "", transform)
+    db_ds = ImageListDataset("dataset/index_test.txt", "", transform)
     # evaluate_recall(model, query_ds, db_ds, gt["utmQ"], gt["utmDb"], float(gt["posDistThr"]), device, recall_values=[1,5,10])
-
-
+    # Evaluate with visualization
+    recalls, sim_scores, ground_truth_dist = evaluate_recall(
+        model=model,
+        query_ds=query_ds,
+        db_ds=db_ds, 
+        utmQ=gt["utmQ"],
+        utmDb=gt["utmDb"],
+        posDistThr=gt["posDistThr"],
+        device=device,
+        recall_values=[1, 5, 10,15,20,25,30],
+        preview=args.preview,  # Set to True to generate visualizations
+        save_dir=args.save_dir,  # Directory to save figures
+        num_examples=len(query_ds),
+        )
+    with open("output/recall_results.txt", "w") as f:
+        f.write(f"Recall@K RESULTS\n")
+        f.write(f"=================\n")
+        for k in recalls:
+            f.write(f"Recall@{k}: {recalls[k]:.2f}%\n")
+        
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--train", type= bool, default=False)
     parser.add_argument("--checkpoint_dir", type=str, default="./output/checkpoints")
     parser.add_argument("--margin", type=float, default=0.1)
+    parser.add_argument("--preview", type=bool, default=False)
+    parser.add_argument("--save_dir", type=str, default="./output/visualizations")
     # parser.add_argument("--lr", type=float, default=1e-4)
     # parser.add_argument("--batch_size", type=int, default=8)
     # parser.add_argument("--num_workers", type=int, default=4)
