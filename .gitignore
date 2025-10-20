@@ -230,7 +230,7 @@ credentials.json
 api_keys.txt
 
 # Output directories
-output/
+# output/
 results/
 logs/
 checkpoints/
