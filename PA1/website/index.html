@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="NetVLAD-based Visual Place Recognition and Camera Pose Estimation - A Deep Learning Approach to Visual Localization">
+  <meta property="og:title" content="NetVLAD-based Visual Place Recognition and Camera Pose Estimation"/>
+  <meta property="og:description" content="A comprehensive implementation of NetVLAD for visual place recognition and camera pose estimation using VGG16-based architecture with triplet ranking loss"/>
+  <meta property="og:url" content="https://github.com/ghafoorharis/2025_AAI5020_PA"/> 
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/images/netvlad_network.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+  <meta name="twitter:title" content="NetVLAD-based Visual Place Recognition and Camera Pose Estimation">
+  <meta name="twitter:description" content="A comprehensive implementation of NetVLAD for visual place recognition and camera pose estimation">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/netvlad_network.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="NetVLAD, Visual Place Recognition, Camera Pose Estimation, Deep Learning, Computer Vision, Visual Localization">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NetVLAD-based Visual Place Recognition and Camera Pose Estimation</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+	    tex2jax: {
+	        inlineMath: [['$','$'], ['\\(','\\)']],
+	        processEscapes: true
+	    }
+	});
+    </script>
+  <script src="static/js/index.js"></script>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="xtitle is-1 publication-title">NetVLAD-based Visual Place Recognition and Camera Pose Estimation</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                Haris Ghafoor</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">AAI5020<br>Advanced AI Course, Yonsei University</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Github link -->
+                <span class="link-block">
+                  <a href="https://github.com/your-username/your-repo" target="_blank"
+                  class="external-link ">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+
+              <!-- Report link -->
+              <span class="link-block">
+                <a href="../output/report.pdf" target="_blank"
+                class="external-link ">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Report</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Network Architecture -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Network Architecture</h2>
+          <img src="static/images/netvlad_network.png" alt="NetVLAD Network Architecture" style="max-width: 600px; height: auto; display: block; margin: 0 auto;">
+          <h2 class="subtitle has-text-centered">
+            VGG16-based NetVLAD architecture for visual place recognition. The network extracts local features, performs soft-assignment to cluster centroids, and aggregates into global descriptors.
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            This project presents a comprehensive implementation of NetVLAD (Network VLAD) for visual place recognition and camera pose estimation. 
+            We develop a VGG16-based NetVLAD architecture that learns discriminative global image descriptors through triplet ranking loss. 
+            The system achieves robust visual localization by combining learned embeddings with geometric verification for accurate camera pose recovery. 
+            Our approach demonstrates strong performance on the Pittsburgh dataset, achieving 20.5% Recall@1 and 57.1% Recall@10 for place recognition, 
+            with geometric pose estimation achieving sub-meter accuracy in favorable conditions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Results Section -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Results</h2>
+      
+      <!-- Recall Graph -->
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h3 class="subtitle is-4">Visual Place Recognition Performance</h3>
+          <img src="static/images/task3_result_graph.png" alt="Recall Performance Graph" style="max-width: 500px; height: auto; display: block; margin: 0 auto;">
+        </div>
+      </div>
+
+      <!-- Camera Pose Estimation Results -->
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h3 class="subtitle is-4">Camera Pose Estimation Results</h3>
+          <table class="table is-fullwidth is-striped">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Success Rate</th>
+                <th>Avg. Translation Error</th>
+                <th>Avg. Rotation Error</th>
+                <th>Geometric Inliers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Embedding Fallback</td>
+                <td>68.4% (13/19)</td>
+                <td>15.2m</td>
+                <td>42.3°</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Two-View Geometry</td>
+                <td>31.6% (6/19)</td>
+                <td>6.8m</td>
+                <td>25.1°</td>
+                <td>60.3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Detailed Query Results -->
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h3 class="subtitle is-4">Detailed Query Results</h3>
+          <table class="table is-fullwidth is-striped">
+            <thead>
+              <tr>
+                <th>Query Scene</th>
+                <th>Best Match</th>
+                <th>Translation Error</th>
+                <th>Rotation Error</th>
+                <th>Method Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>P001_000010</td>
+                <td>P001_000011</td>
+                <td>3.9m</td>
+                <td>24.4°</td>
+                <td>Two-View Geometry</td>
+              </tr>
+              <tr>
+                <td>P004_000013</td>
+                <td>P004_000014</td>
+                <td>1.4m</td>
+                <td>7.7°</td>
+                <td>Two-View Geometry</td>
+              </tr>
+              <tr>
+                <td>P004_000011</td>
+                <td>P004_000012</td>
+                <td>1.3m</td>
+                <td>5.4°</td>
+                <td>Two-View Geometry</td>
+              </tr>
+              <tr>
+                <td>P002_000001</td>
+                <td>P002_000002</td>
+                <td>9.3m</td>
+                <td>28.3°</td>
+                <td>Two-View Geometry</td>
+              </tr>
+              <tr>
+                <td>P001_000002</td>
+                <td>P001_000004</td>
+                <td>5.6m</td>
+                <td>14.1°</td>
+                <td>Two-View Geometry</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Visualization -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Visualization Results</h2>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <img src="static/images/example_visualzations_image_retrieval.svg" alt="Image Retrieval Visualization" style="max-width: 700px; height: auto; display: block; margin: 0 auto;">
+          <h2 class="subtitle has-text-centered">
+            Example image retrieval results showing query images and their best matches from the database.
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Methodology -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Methodology</h2>
+        <div class="content has-text-justified">
+          <h3 class="subtitle is-4">1. NetVLAD Architecture</h3>
+          <ul>
+            <li>VGG16 backbone for feature extraction</li>
+            <li>Soft-assignment of local features to cluster centroids</li>
+            <li>Global descriptor aggregation using VLAD pooling</li>
+            <li>Dimensionality reduction for efficient retrieval</li>
+          </ul>
+
+          <h3 class="subtitle is-4">2. Training Strategy</h3>
+          <ul>
+            <li>Triplet ranking loss with hard negative mining</li>
+            <li>Margin-based formulation for embedding learning</li>
+            <li>End-to-end training with gradient descent</li>
+          </ul>
+
+          <h3 class="subtitle is-4">3. Pose Estimation Pipeline</h3>
+          <ul>
+            <li>Image retrieval using learned embeddings</li>
+            <li>Feature matching between query and database images</li>
+            <li>Two-view geometry estimation using 8-point algorithm</li>
+            <li>Essential matrix decomposition for pose recovery</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Conclusion -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Conclusion</h2>
+        <div class="content has-text-justified">
+          <p>
+            This project successfully demonstrates the effectiveness of NetVLAD for visual place recognition and camera pose estimation. 
+            The combination of learned embeddings with geometric verification provides a robust framework for visual localization. 
+            While the system achieves reasonable performance on the Pittsburgh dataset, there are opportunities for improvement through 
+            better feature matching, more sophisticated geometric verification, and potentially incorporating temporal consistency for video sequences. 
+            The results validate the potential of deep learning approaches for visual localization tasks in real-world scenarios.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://github.com/vinthony/project-page-template">modification version</a> of <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> from <a href="https://github.com/vinthony">vinthony</a>.
+            You are free to borrow the of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+  </html>
