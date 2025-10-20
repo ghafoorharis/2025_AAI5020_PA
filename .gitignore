@@ -71,6 +71,10 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Allow PA1/docs folder for GitHub Pages
+!PA1/docs/
+!PA1/docs/**/*
+
 # PyBuilder
 target/
 
